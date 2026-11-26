@@ -8,19 +8,19 @@ Deadpan Forecasts for Cities That Do Not Exist — one line of at most 160 chara
 
 ## The entry
 
-> Tonight in Glimmerwick: light drizzle of spare keys, a 40 percent chance of deja vu, and fog thick enough to lose Tuesday in.
+> Tomorrow in Vexford: a high of 61, scattered umbrellas at noon, and a 70 percent chance the rain falls upward after 3 p.m.
 
-125 characters, one line, plain ASCII — inside the 1–160 character gate.
+122 characters, one line, plain ASCII — inside the 1–160 character gate.
 
 ## Why this line
 
 Written against the judge's brief, in the order it weighs things:
 
-1. **On subject** — a one-line weather forecast for Glimmerwick, a city that does not exist, absurd yet believable.
-2. **Deadpan twist, first read** — the absurdity is delivered flat, not piled on: spare keys fall like rain, deja vu gets a forecast percentage, and the fog swallows a weekday.
-3. **Vivid** — a concrete number (40 percent) and a concrete image (spare keys falling like rain) make the invented city's weather feel real.
-4. **Broadcast tone** — plain, confident and believable, as if a straight-faced meteorologist were reading it off the map: "Tonight in Glimmerwick".
-5. **Tight** — 125 of 160 characters, well paced, no padding.
+1. **On subject** — a one-line weather forecast for Vexford, a city that does not exist, absurd yet believable.
+2. **Deadpan twist, first read** — the absurdity is delivered flat, not piled on: umbrellas drift overhead at noon like weather, and the afternoon rain gets a forecast percentage for falling upward.
+3. **Vivid** — concrete numbers (a high of 61, 70 percent, 3 p.m.) and a concrete image (rain reversing direction in the afternoon) make the invented city's weather feel real.
+4. **Broadcast tone** — plain, confident and believable, as if a straight-faced meteorologist were reading it off the map: "Tomorrow in Vexford".
+5. **Tight** — 122 of 160 characters, well paced, no padding.
 
 ## Run it
 

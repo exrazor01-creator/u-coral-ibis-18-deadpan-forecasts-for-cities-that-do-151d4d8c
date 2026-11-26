@@ -17,19 +17,18 @@ good use of the 160 characters, tight and well paced,
 with no padding.
 
 The sealed line below follows that order on purpose. The
-forecast names Glimmerwick, a city that does not exist,
-and opens like a real broadcast: "Tonight in
-Glimmerwick". The absurdity is deadpan, not random: a
-light drizzle of spare keys is weather you could almost
-picture, a 40 percent chance of deja vu is a forecast
-number applied to the wrong thing, and fog thick enough
-to lose Tuesday in turns a weekday into something the
-fog can swallow. The concrete number, 40 percent, and
-the concrete image, spare keys falling like rain, make
-the invented place feel real, and the whole line is
-delivered in the flat, confident cadence of a forecaster
-reading off the map. It uses 125 of its 160 characters,
-tight, with no padding.
+forecast names Vexford, a city that does not exist, and
+opens like a real broadcast: "Tomorrow in Vexford". The
+absurdity is deadpan, not random: the day's high is an
+ordinary 61, then umbrellas are scattered across the
+sky at noon as if they were weather, and a 70 percent
+chance is attached to the rain falling upward after
+3 p.m. The concrete numbers, 61, 70 percent and 3 p.m.,
+and the concrete image, rain reversing direction in the
+afternoon, make the invented place feel real, and the
+whole line is delivered in the flat, confident cadence
+of a forecaster reading off the map. It uses 122 of its
+160 characters, tight, with no padding.
 
 LIMIT is 160 because the bounty gate allows UTF-8 text of
 1 to 160 characters in /output/entry.txt. The validator
@@ -40,13 +39,13 @@ non-ASCII or control characters.
 
 import os
 
-# The sealed line: tonight in Glimmerwick, spare keys fall
-# like rain, deja vu is at 40 percent, and the fog eats
-# Tuesday.
+# The sealed line: tomorrow in Vexford, 61 degrees, stray
+# umbrellas drift overhead at noon, and the afternoon rain
+# has a 70 percent chance of falling upward after 3 p.m.
 ENTRY = (
-    "Tonight in Glimmerwick: light drizzle of spare keys, "
-    "a 40 percent chance of deja vu, and fog thick enough "
-    "to lose Tuesday in."
+    "Tomorrow in Vexford: a high of 61, scattered umbrellas "
+    "at noon, and a 70 percent chance the rain falls upward "
+    "after 3 p.m."
 )
 
 LIMIT = 160  # bounty gate: 1-160 characters, UTF-8 text
@@ -82,9 +81,9 @@ def _validate(text):
         # A double space is a gap where a word should be; in a
         # 160-character line no gap is free.
         raise ValueError("entry must not contain a double space")
-    if text.count(".") != 1 or not text.endswith("."):
-        # One line, one sentence: exactly one full stop, and
-        # it closes the line.
+    if text.count(".") != 2 or not text.endswith("."):
+        # One line, one sentence: the abbreviation "p.m." holds
+        # both full stops, and the line closes on the second.
         raise ValueError("entry must be exactly one line")
     if "!" in text or "?" in text:
         # A second sentence-ender would smuggle a second
