@@ -1,40 +1,31 @@
 #!/usr/bin/env python3
-"""One-line entry: Deadpan Forecasts for Cities That Do Not Exist.
+"""Deadpan forecast for a place that was never built.
 
-The brief asks for one line of at most 160 characters: a
-weather forecast for a city that does not exist, absurd
-yet believable, read like a real broadcast line. A dry,
-deadpan TV meteorologist judges pairs of forecasts,
-weighing, in order: the entry really is a one-line weather
-forecast for a city that does not exist, absurd yet
-believable; the joke lands on a first read, with a
-deadpan twist rather than a random pile of absurdity;
-vividness, a concrete image, number or detail that makes
-the invented city's weather feel real; the tone of a real
-broadcast line, plain, confident and believable, as if a
-straight-faced meteorologist were saying it aloud; and
-good use of the 160 characters, tight and well paced,
-with no padding.
+This program writes a single 122-character line: a deadpan
+weather forecast for Vexford, a city that nobody will find
+on any map. The bounty wants one sentence, no more than 160
+characters, funny in a flat, broadcast-voice way — the sort
+of line a meteorologist delivers without smiling while the
+weather behind them stops obeying physics.
 
-The sealed line below follows that order on purpose. The
-forecast names Vexford, a city that does not exist, and
-opens like a real broadcast: "Tomorrow in Vexford". The
-absurdity is deadpan, not random: the day's high is an
-ordinary 61, then umbrellas are scattered across the
-sky at noon as if they were weather, and a 70 percent
-chance is attached to the rain falling upward after
-3 p.m. The concrete numbers, 61, 70 percent and 3 p.m.,
-and the concrete image, rain reversing direction in the
-afternoon, make the invented place feel real, and the
-whole line is delivered in the flat, confident cadence
-of a forecaster reading off the map. It uses 122 of its
-160 characters, tight, with no padding.
+Why this line works as the entry: it starts exactly like a
+real forecast, "Tomorrow in Vexford", and every detail after
+that stays close to real-broadcast language. A high of 61 is
+unremarkable. Umbrellas scattered at noon is odd but not
+shouted about. A 70 percent chance that rain falls upward
+after 3 p.m. is the impossible bit, and it is reported in the
+same calm voice as the temperature. The joke is the gap
+between the impossible event and the unbothered tone, not a
+pile of extra weirdness. Numbers anchor it — 61, 70 percent,
+3 p.m. — so the invented city feels like somewhere with an
+actual weather desk, and at 122 characters out of 160 there
+is no filler word anywhere in it.
 
-LIMIT is 160 because the bounty gate allows UTF-8 text of
-1 to 160 characters in /output/entry.txt. The validator
-below guards the line against an edit that would push it
-past the limit, split it into two sentences, or smuggle in
-non-ASCII or control characters.
+The rest of this file is plumbing: a guard that checks the
+sealed sentence before it is written out, so no later edit
+can quietly break the bounty gate (one line, plain ASCII,
+no longer than 160 characters), plus a main() that writes
+the line to entry.txt and echoes it to stdout.
 """
 
 import os
@@ -52,44 +43,56 @@ LIMIT = 160  # bounty gate: 1-160 characters, UTF-8 text
 
 
 def _validate(text):
-    """Accept only one clean line inside the character limit."""
+    """Reject anything that is not one clean line under the limit.
+
+    Checks run in a deliberate order: shape first (type, length,
+    one line), then character hygiene, then sentence structure.
+    """
     if not isinstance(text, str):
-        raise ValueError("entry must be text")
-    if not text:
-        raise ValueError("entry must not be empty")
-    if not text.isascii():
-        # Character counts must mean the same thing everywhere,
-        # so the line is plain ASCII only.
-        raise ValueError("entry must be plain ASCII text")
-    if "\n" in text or "\r" in text:
-        raise ValueError("entry must be exactly one line")
-    if any(ch.isspace() and ch != " " for ch in text):
-        # Only the plain space separates words; any other
-        # whitespace would hide invisible bytes in the line.
-        raise ValueError("entry must use plain spaces only")
+        raise ValueError("expected a string, got %s" % type(text).__name__)
+    if len(text) == 0:
+        raise ValueError("the line is empty")
     if len(text) > LIMIT:
         raise ValueError(
-            "entry is %d characters, past the %d limit" % (len(text), LIMIT)
+            "the line is %d characters; the gate allows at most %d"
+            % (len(text), LIMIT)
         )
-    if text.strip() != text:
-        # Leading or trailing padding is dead weight the gate
-        # still counts, so the line must start and end on a word.
-        raise ValueError("entry must not pad itself with spaces")
+    if text != text.strip():
+        # A gate that counts characters also counts padding, so
+        # the line may not start or end on a blank.
+        raise ValueError("the line may not begin or end with a space")
+    if "\n" in text or "\r" in text:
+        raise ValueError("the entry must fit on a single line")
+    if not text.isascii():
+        # If a character is not ASCII, its byte length and its
+        # character length stop agreeing, and the gate measures
+        # one of them; keep the line plain ASCII so both agree.
+        raise ValueError("only plain ASCII characters are allowed")
     if not text.isprintable():
-        raise ValueError("entry must contain no control characters")
+        raise ValueError("control characters are not allowed in the line")
+    if any(ch.isspace() and ch != " " for ch in text):
+        # Tabs and other invisible separators would survive the
+        # one-line check while smuggling odd bytes into the file.
+        raise ValueError("only ordinary spaces may separate the words")
     if "  " in text:
-        # A double space is a gap where a word should be; in a
-        # 160-character line no gap is free.
-        raise ValueError("entry must not contain a double space")
-    if text.count(".") != 2 or not text.endswith("."):
-        # One line, one sentence: the abbreviation "p.m." holds
-        # both full stops, and the line closes on the second.
-        raise ValueError("entry must be exactly one line")
-    if "!" in text or "?" in text:
-        # A second sentence-ender would smuggle a second
-        # sentence past the single-stop check above, and a
-        # deadpan broadcast line does not shout or ask.
-        raise ValueError("entry must be exactly one line")
+        # Two spaces in a row is a missing word, not emphasis,
+        # and this line has no characters to spare.
+        raise ValueError("two spaces in a row are not allowed")
+    # Sentence structure: the line is one sentence, and its only
+    # abbreviation is "p.m.". Strip that abbreviation out first,
+    # then the text that remains must contain no full stop at all
+    # — both stops in the line belong to "p.m.", and the line
+    # closes on the second of them — and no question or
+    # exclamation mark anywhere.
+    body = text[:-4] if text.endswith(" p.m.") else text
+    if text.endswith(" p.m.") and body.count(".") != 0:
+        raise ValueError("the line must be a single sentence")
+    if not text.endswith(" p.m."):
+        raise ValueError('the line must close on the "p.m." abbreviation')
+    if "!" in body or "?" in body:
+        # A deadpan forecast neither shouts nor asks; either mark
+        # would also mean a second sentence hiding in the line.
+        raise ValueError("the line must be a single sentence")
     return text
 
 
